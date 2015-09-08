@@ -3,37 +3,210 @@ module.exports={
     "title": "JS2015 Tree",
     "nodes": [
         {
-            "name": "Node 1",
+            "name": "2015",
             "children": [
                 {
-                    "name": "Node 1-A"
-                },
-                {
-                    "name": "Node 1-B",
+                    "name": "No Closer To Heaven",
                     "children": [
                         {
-                            "name": "Node 1-B-A"
+                            "name": "Brothers &"
+                        },
+                        {
+                            "name": "Cardinals"
+                        },
+                        {
+                            "name": "A Song For Patsy Cline"
+                        },
+                        {
+                            "name": "I Don't Like Who I Was Then"
+                        },
+                        {
+                            "name": "Cigarettes & Saints"
+                        },
+                        {
+                            "name": "The Bluest Things On Earth"
+                        },
+                        {
+                            "name": "A Song For Ernest Hemingway"
+                        },
+                        {
+                            "name": "Thanks For The Ride"
+                        },
+                        {
+                            "name": "Stained Glass Ceilings"
+                        },
+                        {
+                            "name": "I Wanted So Badly To Be Brave"
+                        },
+                        {
+                            "name": "You In January"
+                        },
+                        {
+                            "name": "Palm Reader"
+                        },
+                        {
+                            "name": "No Closer To Heaven"
                         }
                     ]
                 }
             ]
         },
         {
-            "name": "Node 2"
-        },
-        {
-            "name": "Node 3",
+            "name": "2013",
             "children": [
                 {
-                    "name": "Node 3-A"
+                    "name": "The Greatest Generation",
+                    "children": [
+                        {
+                            "name": "There, there"
+                        },
+                        {
+                            "name": "Passing Through A Screen Door"
+                        },
+                        {
+                            "name": "We Could Die Like This"
+                        },
+                        {
+                            "name": "Dismantling Summer"
+                        },
+                        {
+                            "name": "The Bastards, The Vultures, The Wolves"
+                        },
+                        {
+                            "name": "The Devil In My Bloodstream"
+                        },
+                        {
+                            "name": "Teenage Parents"
+                        },
+                        {
+                            "name": "Chaser"
+                        },
+                        {
+                            "name": "An American Religion (FSF)"
+                        },
+                        {
+                            "name": "A Raindance In Traffic"
+                        },
+                        {
+                            "name": "Madelyn"
+                        },
+                        {
+                            "name": "Cul-de-sac"
+                        },
+                        {
+                            "name": "I Just Want To Sell Out My Funeral"
+                        }
+                    ]
                 }
             ]
         },
         {
-            "name": "Node 4",
-            "children": [
+            "name": "2011",
+             "children": [
                 {
-                    "name": "Node 4-A"
+                    "name": "Suburbia: I've Given You All And Now I'm Nothing",
+                    "children": [
+                        {
+                            "name": "Came Out Swinging"
+                        },
+                        {
+                            "name": "Woke Up Older"
+                        },
+                        {
+                            "name": "Local Man Ruins Everything"
+                        },
+                        {
+                            "name": "Suburbia"
+                        },
+                        {
+                            "name": "My Life As A Pigeon"
+                        },
+                        {
+                            "name": "Summers In PA"
+                        },
+                        {
+                            "name": "I Won't Say The Lord's Prayer"
+                        },
+                        {
+                            "name": "Coffee Eyes"
+                        },
+                        {
+                            "name": "I've Given You All"
+                        },
+                        {
+                            "name": "Don't Let Me Cave In"
+                        },
+                        {
+                            "name": "You Made Me Want To Be A Saint"
+                        },
+                        {
+                            "name": "Hoodie Weather"
+                        },
+                        {
+                            "name": "And Now I'm Nothing"
+                        },
+                        {
+                            "name": "My Life As Rob Gordon"
+                        },
+                        {
+                            "name": "Living Room Song"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "2011",
+             "children": [
+                {
+                    "name": "The Upsides",
+                    "children": [
+                        {
+                            "name": "My Last Semester"
+                        },
+                        {
+                            "name": "Logan Circle"
+                        },
+                        {
+                            "name": "Everything I Own Fits In This Backpack"
+                        },
+                        {
+                            "name": "Dynamite Shovel"
+                        },
+                        {
+                            "name": "New Years With Carl Weathers"
+                        },
+                        {
+                            "name": "It's Never Sunny In South Philadelphia"
+                        },
+                        {
+                            "name": "Hostels And Brothels"
+                        },
+                        {
+                            "name": "Melrose Diner"
+                        },
+                        {
+                            "name": "This Party Sucks"
+                        },
+                        {
+                            "name": "Hey Thanks"
+                        },
+                        {
+                            "name": "Washington Square Park"
+                        },
+                        {
+                            "name": "All My Friends Are In Bar Bands"
+                        },
+                        {
+                            "name": "I Was Scared And I'm Sorry"
+                        },
+                        {
+                            "name": "Logan Circle: A New Hope"
+                        },
+                        {
+                            "name": "We Won't Bury You"
+                        }
+                    ]
                 }
             ]
         }
@@ -44,7 +217,7 @@ module.exports={
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 22:52:56
+* @Last Modified time: 2015-09-07 23:27:34
 */
 
 'use strict';
@@ -114,13 +287,11 @@ var TreeNode = (function () {
 
             this.icon = document.createElement('i');
 
-            this.options.icons.expandIcon.forEach(function (cls) {
+            var classlist = !nodeData.children || nodeData.children.length < 1 ? this.options.icons.noChildren : this.options.icons.expandIcon;
+
+            classlist.forEach(function (cls) {
                 _this.icon.classList.add(cls);
             }, this);
-
-            if (!nodeData.children || nodeData.children.length < 1) {
-                this.icon.classList.add('hidden');
-            }
 
             return this.icon;
         }
@@ -166,6 +337,7 @@ var TreeNode = (function () {
         key: 'ondragstart',
         value: function ondragstart(e) {
             e.dataTransfer.setData('application/json', JSON.stringify(this));
+            // this.element.remove();
         }
     }, {
         key: 'ondragover',
@@ -217,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function () {
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 22:59:00
+* @Last Modified time: 2015-09-07 23:16:38
 */
 
 'use strict';
@@ -251,7 +423,8 @@ var Tree = (function () {
             topLevelClass: 'top-level',
             icons: {
                 expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
-                collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon']
+                collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
+                noChildren: ['fa', 'fa-circle-thin', 'es6-tree-icon']
             },
 
             draggable: true,

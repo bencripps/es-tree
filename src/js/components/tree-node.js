@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 22:52:56
+* @Last Modified time: 2015-09-07 23:27:34
 */
 
 export default class TreeNode {
@@ -63,13 +63,11 @@ export default class TreeNode {
     getIcon(nodeData) {
         this.icon = document.createElement('i');
 
-        this.options.icons.expandIcon.forEach((cls) => {
+        var classlist = !nodeData.children || nodeData.children.length < 1 ? this.options.icons.noChildren : this.options.icons.expandIcon;
+
+        classlist.forEach((cls) => {
             this.icon.classList.add(cls);
         }, this);
-
-        if (!nodeData.children || nodeData.children.length < 1) {
-            this.icon.classList.add('hidden');
-        }
 
         return this.icon;
     }
@@ -111,6 +109,7 @@ export default class TreeNode {
 
     ondragstart(e) {
         e.dataTransfer.setData('application/json', JSON.stringify(this));
+        // this.element.remove();
     }
 
     ondragover(e) {

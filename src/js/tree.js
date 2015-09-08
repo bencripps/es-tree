@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 22:59:00
+* @Last Modified time: 2015-09-07 23:16:38
 */
 
 import TreeNode from './components/tree-node.js';
@@ -22,6 +22,7 @@ export default class Tree {
             icons: {
                 expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
                 collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
+                noChildren: ['fa', 'fa-circle-thin', 'es6-tree-icon']
             },
 
             draggable: true,
