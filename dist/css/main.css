@@ -1,0 +1,13 @@
+.es6-tree-container {
+  margin: 0px auto;
+  margin-top: 20px;
+  width: 80%; }
+  .es6-tree-container.center {
+    text-align: center; }
+
+.es6-tree-leaf {
+  list-style-type: none; }
+  .es6-tree-leaf .es6-tree-node {
+    list-style-type: none; }
+
+/*# sourceMappingURL=main.css.map */

@@ -1,0 +1,9 @@
+.#{$prefix}container {
+    margin: 0px auto;
+    margin-top: 20px;
+    width: 80%;
+
+    &.center {
+        text-align: center;
+    }
+}

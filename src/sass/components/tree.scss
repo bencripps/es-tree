@@ -1,0 +1,7 @@
+.#{$prefix}leaf {
+    list-style-type: none;
+
+    .#{$prefix}node {
+        list-style-type: none;
+    }
+}

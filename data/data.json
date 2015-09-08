@@ -1,0 +1,35 @@
+{
+    "title": "JS2015 Tree",
+    "nodes": [
+        {
+            "name": "Node 1",
+            "children": [
+                {
+                    "name": "Node 1-A"
+                },
+                {
+                    "name": "Node 1-B"
+                }
+            ]
+        },
+        {
+            "name": "Node 2"
+        },
+        {
+            "name": "Node 3",
+            "children": [
+                {
+                    "name": "Node 3-A"
+                }
+            ]
+        },
+        {
+            "name": "Node 4",
+            "children": [
+                {
+                    "name": "Node 4-A"
+                }
+            ]
+        }
+    ]
+}
