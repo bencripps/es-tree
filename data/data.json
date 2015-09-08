@@ -8,7 +8,12 @@
                     "name": "Node 1-A"
                 },
                 {
-                    "name": "Node 1-B"
+                    "name": "Node 1-B",
+                    "children": [
+                        {
+                            "name": "Node 1-B-A"
+                        }
+                    ]
                 }
             ]
         },

@@ -1,0 +1,23 @@
+.#{$prefix}node {
+    list-style-type: none;
+    padding-top: 0px;
+    position: relative;
+    transition-duration: $move-duration;
+    transition-property: padding-top;
+    transition-timing-function: $transition-timing-function;
+
+    .#{$prefix}icon {
+        font-size: 12px;
+        left: -13px;
+        position: relative;
+
+        &.hidden {
+            visibility: hidden;
+        }
+    }
+
+    &.#{$prefix}dragover {
+        padding-top: 15px;
+    }
+
+}

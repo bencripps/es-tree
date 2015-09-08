@@ -1,4 +1,8 @@
 $prefix: 'es6-tree-';
+$show-duration: .3s;
+$move-duration: .1s;
+$transition-timing-function: cubic-bezier(.17,.67,.83,.67);
 
 @import "components/general";
 @import "components/tree";
+@import "components/tree-node";

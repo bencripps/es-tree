@@ -6,8 +6,29 @@
     text-align: center; }
 
 .es6-tree-leaf {
-  list-style-type: none; }
-  .es6-tree-leaf .es6-tree-node {
-    list-style-type: none; }
+  list-style-type: none;
+  max-height: 0px;
+  overflow: hidden;
+  transition-duration: 0.3s;
+  transition-property: max-height;
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+  .es6-tree-leaf.es6-tree-visible {
+    max-height: 100000px; }
+
+.es6-tree-node {
+  list-style-type: none;
+  padding-top: 0px;
+  position: relative;
+  transition-duration: 0.1s;
+  transition-property: padding-top;
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+  .es6-tree-node .es6-tree-icon {
+    font-size: 12px;
+    left: -13px;
+    position: relative; }
+    .es6-tree-node .es6-tree-icon.hidden {
+      visibility: hidden; }
+  .es6-tree-node.es6-tree-dragover {
+    padding-top: 15px; }
 
 /*# sourceMappingURL=main.css.map */

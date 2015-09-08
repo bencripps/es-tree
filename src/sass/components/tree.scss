@@ -1,7 +1,12 @@
 .#{$prefix}leaf {
     list-style-type: none;
+    max-height: 0px;
+    overflow: hidden;
+    transition-duration: $show-duration;
+    transition-property: max-height;
+    transition-timing-function: $transition-timing-function;
 
-    .#{$prefix}node {
-        list-style-type: none;
+    &.#{$prefix}visible {
+        max-height: 100000px;
     }
 }

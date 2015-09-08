@@ -9,7 +9,12 @@ module.exports={
                     "name": "Node 1-A"
                 },
                 {
-                    "name": "Node 1-B"
+                    "name": "Node 1-B",
+                    "children": [
+                        {
+                            "name": "Node 1-B-A"
+                        }
+                    ]
                 }
             ]
         },
@@ -39,7 +44,7 @@ module.exports={
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 18:58:16
+* @Last Modified time: 2015-09-07 22:52:56
 */
 
 'use strict';
@@ -48,15 +53,135 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var TreeNode = function TreeNode(nodeData, index) {
-    _classCallCheck(this, TreeNode);
+var TreeNode = (function () {
+    function TreeNode(nodeData, options, index) {
+        _classCallCheck(this, TreeNode);
 
-    this.element = document.createElement('li');
-    this.element.classList.add('es6-tree-node');
-    this.element.innerHTML = nodeData.name;
-};
+        this.element = document.createElement('li');
+
+        this.defaults = {
+            dragEvents: [{
+                name: 'dragstart',
+                fn: this.ondragstart
+            }, {
+                name: 'ondrag',
+                fn: this.ondrag
+            }, {
+                name: 'dragend',
+                fn: this.ondragend
+            }, {
+                name: 'dragover',
+                fn: this.ondragover
+            }, {
+                name: 'dragleave',
+                fn: this.ondragover
+            }, {
+                name: 'drop',
+                fn: this.ondrop
+            }]
+        };
+
+        this.options = Object.assign(this.defaults, options);
+
+        this.element.classList.add(this.options.nodeClass);
+
+        this.element.appendChild(this.getIcon(nodeData));
+
+        this.initIconEvents();
+
+        if (this.options.draggable) {
+            this.initDragEvents();
+        }
+
+        this.element.appendChild(this.getDisplayText(nodeData.name));
+    }
+
+    _createClass(TreeNode, [{
+        key: 'getDisplayText',
+        value: function getDisplayText(name) {
+            this.displayText = document.createElement('span');
+            this.displayText.innerHTML = name;
+            return this.displayText;
+        }
+    }, {
+        key: 'getIcon',
+        value: function getIcon(nodeData) {
+            var _this = this;
+
+            this.icon = document.createElement('i');
+
+            this.options.icons.expandIcon.forEach(function (cls) {
+                _this.icon.classList.add(cls);
+            }, this);
+
+            if (!nodeData.children || nodeData.children.length < 1) {
+                this.icon.classList.add('hidden');
+            }
+
+            return this.icon;
+        }
+    }, {
+        key: 'initDragEvents',
+        value: function initDragEvents() {
+            var _this2 = this;
+
+            this.element.setAttribute('draggable', true);
+
+            this.options.dragEvents.forEach(function (eventObj) {
+                _this2.element.addEventListener(eventObj.name, eventObj.fn.bind(_this2));
+            }, this);
+        }
+    }, {
+        key: 'initIconEvents',
+        value: function initIconEvents() {
+            var _this3 = this;
+
+            this.icon.addEventListener('click', function (e) {
+
+                var isExpanding = _this3.icon.classList.contains(_this3.options.icons.expandIcon[1]),
+                    classList = isExpanding ? _this3.options.icons.collapseIcon : _this3.options.icons.expandIcon,
+                    eventFunc = isExpanding ? _this3.options.onExpand : _this3.options.onCollapse,
+                    classesToString = classList.toString().replace(/,/g, ' ');
+
+                _this3.icon.className = classesToString;
+
+                _this3.element.querySelector('ol').classList[isExpanding ? 'add' : 'remove'](_this3.options.prefix + 'visible');
+
+                if (eventFunc) eventFunc.call(e, _this3);
+            }, this);
+        }
+    }, {
+        key: 'ondrag',
+        value: function ondrag(e) {}
+    }, {
+        key: 'ondrop',
+        value: function ondrop(e) {
+            e.preventDefault();
+        }
+    }, {
+        key: 'ondragstart',
+        value: function ondragstart(e) {
+            e.dataTransfer.setData('application/json', JSON.stringify(this));
+        }
+    }, {
+        key: 'ondragover',
+        value: function ondragover(e) {
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+
+            this.element.classList[e.type === 'dragover' ? 'add' : 'remove'](this.options.prefix + 'dragover');
+        }
+    }, {
+        key: 'ondragend',
+        value: function ondragend(e) {}
+    }]);
+
+    return TreeNode;
+})();
 
 exports['default'] = TreeNode;
 module.exports = exports['default'];
@@ -66,7 +191,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:22:43
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 18:36:19
+* @Last Modified time: 2015-09-07 20:09:22
 */
 
 'use strict';
@@ -82,7 +207,9 @@ var _dataDataJson = require('../../data/data.json');
 var _dataDataJson2 = _interopRequireDefault(_dataDataJson);
 
 document.addEventListener('DOMContentLoaded', function () {
-    var tree = new _treeJs2['default']('#tree-mount', _dataDataJson2['default'], {});
+    var tree = new _treeJs2['default']('#tree-mount', _dataDataJson2['default'], {
+        expandedOnLoad: false
+    });
 });
 
 },{"../../data/data.json":1,"./tree.js":4}],4:[function(require,module,exports){
@@ -90,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 19:08:05
+* @Last Modified time: 2015-09-07 22:59:00
 */
 
 'use strict';
@@ -115,26 +242,34 @@ var Tree = (function () {
 
         this.element = document.querySelector(selector);
         this.data = data;
-        this.prefix = 'es6-tree-';
 
-        this.verify();
+        this.verify(selector);
 
         this.defaults = {
             nodeClass: 'es6-tree-node',
+            prefix: 'es6-tree-',
+            topLevelClass: 'top-level',
+            icons: {
+                expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
+                collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon']
+            },
+
             draggable: true,
             destroyable: true,
-            onDestroy: function onDestroy() {},
-            onMove: function onMove() {}
+            expandedOnLoad: true,
+            onDestroy: function onDestroy(node) {},
+            onExpand: function onExpand(node) {},
+            onCollapse: function onCollapse(node) {},
+            onMove: function onMove(node) {}
         };
 
         this.options = Object.assign(this.defaults, options);
-
         this.init();
     }
 
     _createClass(Tree, [{
         key: 'verify',
-        value: function verify() {
+        value: function verify(selector) {
             if (!this.element) throw Error('No document node with ' + selector + ' selector could be found!');
 
             if (!this.data) throw Error('Data must been provided in order to build tree');
@@ -152,7 +287,7 @@ var Tree = (function () {
         key: 'setup',
         value: function setup() {
             this.treeFragment = document.createDocumentFragment();
-            this.startOL = this.get('ol', ['leaf']);
+            this.startOL = this.get('ol', ['leaf', 'visible', this.options.topLevelClass]);
             this.treeFragment.appendChild(this.startOL);
         }
     }, {
@@ -162,11 +297,11 @@ var Tree = (function () {
 
             nodes.forEach(function (node, i) {
 
-                Node = new _componentsTreeNodeJs2['default'](node, i);
+                Node = new _componentsTreeNodeJs2['default'](node, this.options, i);
                 ol.appendChild(Node.element);
 
                 if (node.children) {
-                    newOl = this.get('ol', ['leaf']);
+                    newOl = this.get('ol', ['leaf'], null, { 'drop': this.ondrop });
                     this.buildHTML(node.children, newOl);
                     Node.element.appendChild(newOl);
                 }
@@ -180,14 +315,14 @@ var Tree = (function () {
         }
     }, {
         key: 'get',
-        value: function get(type, classes, text) {
+        value: function get(type, classes, text, events) {
             var _this = this;
 
             var node = document.createElement(type);
 
             if (classes) {
                 classes.forEach(function (cls) {
-                    node.classList.add(_this.prefix + cls);
+                    node.classList.add(_this.options.prefix + cls);
                 }, this);
             }
 
@@ -195,7 +330,20 @@ var Tree = (function () {
                 node.innerHTML = text;
             }
 
+            if (events) {
+                for (var ev in events) {
+                    node.addEventListener(ev, events[ev].bind(this));
+                }
+            }
+
             return node;
+        }
+    }, {
+        key: 'ondrop',
+        value: function ondrop(e) {
+            e.preventDefault();
+            e.dataTransfer.getData();
+            alert('hi');
         }
     }]);
 
