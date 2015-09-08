@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
-    "title": "JS2015 Tree",
+    "title": "The Wonder Years Discography",
     "nodes": [
         {
             "name": "2015",
@@ -215,11 +215,66 @@ module.exports={
 },{}],2:[function(require,module,exports){
 /* 
 * @Author: ben_cripps
-* @Date:   2015-09-07 18:37:18
+* @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 23:27:34
+* @Last Modified time: 2015-09-08 09:10:10
 */
 
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DomHelper = (function () {
+    function DomHelper() {
+        _classCallCheck(this, DomHelper);
+    }
+
+    _createClass(DomHelper, [{
+        key: "get",
+        value: function get(type, classes, text, events) {
+            var _this = this;
+
+            var node = document.createElement(type);
+
+            if (classes) {
+                classes.forEach(function (cls) {
+                    node.classList.add(_this.options.prefix + cls);
+                }, this);
+            }
+
+            if (text) {
+                node.innerHTML = text;
+            }
+
+            if (events) {
+                for (var ev in events) {
+                    node.addEventListener(ev, events[ev].bind(this));
+                }
+            }
+
+            return node;
+        }
+    }]);
+
+    return DomHelper;
+})();
+
+exports["default"] = DomHelper;
+module.exports = exports["default"];
+
+},{}],3:[function(require,module,exports){
+/* 
+* @Author: ben_cripps
+* @Date:   2015-09-07 18:37:18
+* @Last Modified by:   ben_cripps
+* @Last Modified time: 2015-09-08 09:12:21
+*/
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -228,12 +283,25 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var TreeNode = (function () {
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _domHelperJs = require('./dom-helper.js');
+
+var _domHelperJs2 = _interopRequireDefault(_domHelperJs);
+
+var TreeNode = (function (_DomHelper) {
+    _inherits(TreeNode, _DomHelper);
+
     function TreeNode(nodeData, options, index) {
         _classCallCheck(this, TreeNode);
 
+        _get(Object.getPrototypeOf(TreeNode.prototype), 'constructor', this).call(this);
         this.element = document.createElement('li');
 
         this.defaults = {
@@ -353,43 +421,17 @@ var TreeNode = (function () {
     }]);
 
     return TreeNode;
-})();
+})(_domHelperJs2['default']);
 
 exports['default'] = TreeNode;
 module.exports = exports['default'];
 
-},{}],3:[function(require,module,exports){
-/* 
-* @Author: ben_cripps
-* @Date:   2015-09-07 18:22:43
-* @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 20:09:22
-*/
-
-'use strict';
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _treeJs = require('./tree.js');
-
-var _treeJs2 = _interopRequireDefault(_treeJs);
-
-var _dataDataJson = require('../../data/data.json');
-
-var _dataDataJson2 = _interopRequireDefault(_dataDataJson);
-
-document.addEventListener('DOMContentLoaded', function () {
-    var tree = new _treeJs2['default']('#tree-mount', _dataDataJson2['default'], {
-        expandedOnLoad: false
-    });
-});
-
-},{"../../data/data.json":1,"./tree.js":4}],4:[function(require,module,exports){
+},{"./dom-helper.js":2}],4:[function(require,module,exports){
 /* 
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 23:16:38
+* @Last Modified time: 2015-09-08 09:11:15
 */
 
 'use strict';
@@ -400,18 +442,29 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _componentsTreeNodeJs = require('./components/tree-node.js');
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _componentsTreeNodeJs2 = _interopRequireDefault(_componentsTreeNodeJs);
+var _domHelperJs = require('./dom-helper.js');
 
-var Tree = (function () {
+var _domHelperJs2 = _interopRequireDefault(_domHelperJs);
+
+var _treeNodeJs = require('./tree-node.js');
+
+var _treeNodeJs2 = _interopRequireDefault(_treeNodeJs);
+
+var Tree = (function (_DomHelper) {
+    _inherits(Tree, _DomHelper);
+
     function Tree(selector, data, options) {
         _classCallCheck(this, Tree);
 
+        _get(Object.getPrototypeOf(Tree.prototype), 'constructor', this).call(this);
         this.element = document.querySelector(selector);
         this.data = data;
 
@@ -470,7 +523,7 @@ var Tree = (function () {
 
             nodes.forEach(function (node, i) {
 
-                Node = new _componentsTreeNodeJs2['default'](node, this.options, i);
+                Node = new _treeNodeJs2['default'](node, this.options, i);
                 ol.appendChild(Node.element);
 
                 if (node.children) {
@@ -487,31 +540,6 @@ var Tree = (function () {
             this.element.appendChild(title);
         }
     }, {
-        key: 'get',
-        value: function get(type, classes, text, events) {
-            var _this = this;
-
-            var node = document.createElement(type);
-
-            if (classes) {
-                classes.forEach(function (cls) {
-                    node.classList.add(_this.options.prefix + cls);
-                }, this);
-            }
-
-            if (text) {
-                node.innerHTML = text;
-            }
-
-            if (events) {
-                for (var ev in events) {
-                    node.addEventListener(ev, events[ev].bind(this));
-                }
-            }
-
-            return node;
-        }
-    }, {
         key: 'ondrop',
         value: function ondrop(e) {
             e.preventDefault();
@@ -521,9 +549,35 @@ var Tree = (function () {
     }]);
 
     return Tree;
-})();
+})(_domHelperJs2['default']);
 
 exports['default'] = Tree;
 module.exports = exports['default'];
 
-},{"./components/tree-node.js":2}]},{},[3,4]);
+},{"./dom-helper.js":2,"./tree-node.js":3}],5:[function(require,module,exports){
+/* 
+* @Author: ben_cripps
+* @Date:   2015-09-07 18:22:43
+* @Last Modified by:   ben_cripps
+* @Last Modified time: 2015-09-08 09:07:37
+*/
+
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _componentsTreeJs = require('./components/tree.js');
+
+var _componentsTreeJs2 = _interopRequireDefault(_componentsTreeJs);
+
+var _dataDataJson = require('../../data/data.json');
+
+var _dataDataJson2 = _interopRequireDefault(_dataDataJson);
+
+document.addEventListener('DOMContentLoaded', function () {
+    var tree = new _componentsTreeJs2['default']('#tree-mount', _dataDataJson2['default'], {
+        expandedOnLoad: false
+    });
+});
+
+},{"../../data/data.json":1,"./components/tree.js":4}]},{},[5]);

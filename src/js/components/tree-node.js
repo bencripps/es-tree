@@ -2,11 +2,13 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-07 23:27:34
+* @Last Modified time: 2015-09-08 09:12:21
 */
+import DomHelper from './dom-helper.js';
 
-export default class TreeNode {
+export default class TreeNode extends DomHelper {
     constructor(nodeData, options, index) {
+        super();
         this.element = document.createElement('li');
 
         this.defaults = {
