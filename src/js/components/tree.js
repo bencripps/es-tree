@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 09:11:15
+* @Last Modified time: 2015-09-08 20:29:08
 */
 
 import DomHelper from './dom-helper.js';
@@ -26,7 +26,6 @@ export default class Tree extends DomHelper {
                 collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
                 noChildren: ['fa', 'fa-circle-thin', 'es6-tree-icon']
             },
-
             draggable: true,
             destroyable: true,
             expandedOnLoad: true,
@@ -56,12 +55,14 @@ export default class Tree extends DomHelper {
 
     setup() {
         this.treeFragment = document.createDocumentFragment();
-        this.startOL = this.get('ol', ['leaf', 'visible', this.options.topLevelClass]);
+        this.startOL = this.get('ol', ['leaf', 'visible', this.options.topLevelClass], null);
         this.treeFragment.appendChild(this.startOL);
     }
 
     buildHTML(nodes, ol) {
-        var Node, newOl;
+        var Node, newOl, classList = ['leaf'];
+
+        if (this.options.expandedOnLoad) classList.push('visible');
 
         nodes.forEach(function(node, i) {
 
@@ -69,7 +70,7 @@ export default class Tree extends DomHelper {
             ol.appendChild(Node.element);
 
             if (node.children) {
-                newOl = this.get('ol', ['leaf'], null, {'drop': this.ondrop});
+                newOl = this.get('ol', classList, null);
                 this.buildHTML(node.children, newOl);
                 Node.element.appendChild(newOl);
             }
@@ -81,11 +82,4 @@ export default class Tree extends DomHelper {
         var title = this.get('div', ['title'], this.data.title);
         this.element.appendChild(title);
     }
-
-    ondrop(e) {
-        e.preventDefault();
-        e.dataTransfer.getData();
-        alert('hi');
-    }
-
 }

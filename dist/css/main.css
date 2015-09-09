@@ -13,7 +13,9 @@
   transition-property: max-height;
   transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); }
   .es6-tree-leaf.es6-tree-visible {
-    max-height: 100000px; }
+    max-height: 300px; }
+  .es6-tree-leaf.es6-tree-top-level {
+    max-height: 1000000px !important; }
 
 .es6-tree-node {
   list-style-type: none;

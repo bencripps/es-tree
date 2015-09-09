@@ -217,18 +217,18 @@ module.exports={
 * @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 09:10:10
+* @Last Modified time: 2015-09-08 20:32:14
 */
 
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var DomHelper = (function () {
     function DomHelper() {
@@ -236,7 +236,7 @@ var DomHelper = (function () {
     }
 
     _createClass(DomHelper, [{
-        key: "get",
+        key: 'get',
         value: function get(type, classes, text, events) {
             var _this = this;
 
@@ -260,20 +260,50 @@ var DomHelper = (function () {
 
             return node;
         }
+    }, {
+        key: 'isEqual',
+        value: function isEqual(type, obj1, obj2) {
+
+            if (type === 'array') {
+                if (obj1.join(',') === obj2.join(',')) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }, {
+        key: 'ondrop',
+        value: function ondrop(e) {
+            e.preventDefault();
+            e.dataTransfer.getData('text');
+            alert('hi');
+        }
+    }, {
+        key: 'ondragover',
+        value: function ondragover(e) {
+            console.log('hiii');
+            e.preventDefault();
+        }
+    }, {
+        key: 'doDrop',
+        value: function doDrop() {
+            // do drop
+        }
     }]);
 
     return DomHelper;
 })();
 
-exports["default"] = DomHelper;
-module.exports = exports["default"];
+exports['default'] = DomHelper;
+module.exports = exports['default'];
 
 },{}],3:[function(require,module,exports){
 /* 
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 09:12:21
+* @Last Modified time: 2015-09-08 20:31:09
 */
 'use strict';
 
@@ -302,7 +332,7 @@ var TreeNode = (function (_DomHelper) {
         _classCallCheck(this, TreeNode);
 
         _get(Object.getPrototypeOf(TreeNode.prototype), 'constructor', this).call(this);
-        this.element = document.createElement('li');
+        this.element = this.get('li', [], null, null);
 
         this.defaults = {
             dragEvents: [{
@@ -332,7 +362,7 @@ var TreeNode = (function (_DomHelper) {
 
         this.element.appendChild(this.getIcon(nodeData));
 
-        this.initIconEvents();
+        this.initIconEvents(nodeData);
 
         if (this.options.draggable) {
             this.initDragEvents();
@@ -344,24 +374,36 @@ var TreeNode = (function (_DomHelper) {
     _createClass(TreeNode, [{
         key: 'getDisplayText',
         value: function getDisplayText(name) {
-            this.displayText = document.createElement('span');
-            this.displayText.innerHTML = name;
-            return this.displayText;
+            return this.get('span', [], name, null);
         }
     }, {
         key: 'getIcon',
         value: function getIcon(nodeData) {
             var _this = this;
 
-            this.icon = document.createElement('i');
+            this.icon = this.get('i', []);
 
-            var classlist = !nodeData.children || nodeData.children.length < 1 ? this.options.icons.noChildren : this.options.icons.expandIcon;
+            var classlist = this.getIconClass(nodeData);
 
             classlist.forEach(function (cls) {
                 _this.icon.classList.add(cls);
             }, this);
 
             return this.icon;
+        }
+    }, {
+        key: 'getIconClass',
+        value: function getIconClass(nodeData) {
+
+            var classlist;
+
+            if (!nodeData.children || nodeData.children.length < 1) {
+                classlist = this.options.icons.noChildren;
+            } else {
+                classlist = this.options.expandedOnLoad ? this.options.icons.collapseIcon : this.options.icons.expandIcon;
+            }
+
+            return classlist;
         }
     }, {
         key: 'initDragEvents',
@@ -376,10 +418,12 @@ var TreeNode = (function (_DomHelper) {
         }
     }, {
         key: 'initIconEvents',
-        value: function initIconEvents() {
+        value: function initIconEvents(nodeData) {
             var _this3 = this;
 
             this.icon.addEventListener('click', function (e) {
+
+                if (_this3.isEqual('array', _this3.options.icons.noChildren, Array.from(_this3.icon.classList))) return false;
 
                 var isExpanding = _this3.icon.classList.contains(_this3.options.icons.expandIcon[1]),
                     classList = isExpanding ? _this3.options.icons.collapseIcon : _this3.options.icons.expandIcon,
@@ -395,22 +439,26 @@ var TreeNode = (function (_DomHelper) {
         }
     }, {
         key: 'ondrag',
-        value: function ondrag(e) {}
+        value: function ondrag(e) {
+            e.preventDefault();
+        }
     }, {
         key: 'ondrop',
         value: function ondrop(e) {
+            e.stopPropagation();
             e.preventDefault();
+            this.doDrop();
         }
     }, {
         key: 'ondragstart',
         value: function ondragstart(e) {
-            e.dataTransfer.setData('application/json', JSON.stringify(this));
+            e.dataTransfer.setData('text', JSON.stringify(this));
             // this.element.remove();
         }
     }, {
         key: 'ondragover',
         value: function ondragover(e) {
-            e.stopPropagation();
+            e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
 
             this.element.classList[e.type === 'dragover' ? 'add' : 'remove'](this.options.prefix + 'dragover');
@@ -431,7 +479,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 09:11:15
+* @Last Modified time: 2015-09-08 20:29:08
 */
 
 'use strict';
@@ -479,7 +527,6 @@ var Tree = (function (_DomHelper) {
                 collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
                 noChildren: ['fa', 'fa-circle-thin', 'es6-tree-icon']
             },
-
             draggable: true,
             destroyable: true,
             expandedOnLoad: true,
@@ -513,13 +560,17 @@ var Tree = (function (_DomHelper) {
         key: 'setup',
         value: function setup() {
             this.treeFragment = document.createDocumentFragment();
-            this.startOL = this.get('ol', ['leaf', 'visible', this.options.topLevelClass]);
+            this.startOL = this.get('ol', ['leaf', 'visible', this.options.topLevelClass], null);
             this.treeFragment.appendChild(this.startOL);
         }
     }, {
         key: 'buildHTML',
         value: function buildHTML(nodes, ol) {
-            var Node, newOl;
+            var Node,
+                newOl,
+                classList = ['leaf'];
+
+            if (this.options.expandedOnLoad) classList.push('visible');
 
             nodes.forEach(function (node, i) {
 
@@ -527,7 +578,7 @@ var Tree = (function (_DomHelper) {
                 ol.appendChild(Node.element);
 
                 if (node.children) {
-                    newOl = this.get('ol', ['leaf'], null, { 'drop': this.ondrop });
+                    newOl = this.get('ol', classList, null);
                     this.buildHTML(node.children, newOl);
                     Node.element.appendChild(newOl);
                 }
@@ -538,13 +589,6 @@ var Tree = (function (_DomHelper) {
         value: function createTitle() {
             var title = this.get('div', ['title'], this.data.title);
             this.element.appendChild(title);
-        }
-    }, {
-        key: 'ondrop',
-        value: function ondrop(e) {
-            e.preventDefault();
-            e.dataTransfer.getData();
-            alert('hi');
         }
     }]);
 
@@ -559,7 +603,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:22:43
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 09:07:37
+* @Last Modified time: 2015-09-08 20:34:54
 */
 
 'use strict';

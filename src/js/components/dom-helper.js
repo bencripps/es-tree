@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 09:10:10
+* @Last Modified time: 2015-09-08 20:32:14
 */
 
 export default class DomHelper {
@@ -10,7 +10,7 @@ export default class DomHelper {
 
     }
 
-     get(type, classes, text, events) {
+    get(type, classes, text, events) {
         var node = document.createElement(type);
 
         if (classes) {
@@ -31,5 +31,34 @@ export default class DomHelper {
         }
 
         return node;
-    }   
+    }
+
+    isEqual(type, obj1, obj2) {
+
+        if (type === 'array') {
+            if (obj1.join(',') === obj2.join(',')) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    ondrop(e) {
+        e.preventDefault();
+        e.dataTransfer.getData('text');
+        alert('hi');
+    }
+
+    ondragover(e) {
+        console.log('hiii');
+        e.preventDefault();
+    }
+
+    doDrop() {
+       // do drop
+    }
+
+
 }

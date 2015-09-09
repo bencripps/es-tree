@@ -7,6 +7,10 @@
     transition-timing-function: $transition-timing-function;
 
     &.#{$prefix}visible {
-        max-height: 100000px;
+        max-height: $max-height-for-animation;
+    }
+
+    &.#{$prefix}top-level {
+        max-height: 1000000px !important;
     }
 }
