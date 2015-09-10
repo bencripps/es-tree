@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 20:29:08
+* @Last Modified time: 2015-09-09 20:48:21
 */
 
 import DomHelper from './dom-helper.js';
@@ -21,6 +21,8 @@ export default class Tree extends DomHelper {
             nodeClass: 'es6-tree-node',
             prefix: 'es6-tree-',
             topLevelClass:'top-level',
+            nodeCopyClass: 'es6-tree-node-copy',
+            dragoverClass: 'es6-tree-dragover',
             icons: {
                 expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
                 collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
@@ -65,7 +67,6 @@ export default class Tree extends DomHelper {
         if (this.options.expandedOnLoad) classList.push('visible');
 
         nodes.forEach(function(node, i) {
-
             Node = new TreeNode(node, this.options, i);
             ol.appendChild(Node.element);
 

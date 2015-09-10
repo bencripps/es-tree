@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:22:43
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 20:34:54
+* @Last Modified time: 2015-09-09 19:33:18
 */
 
 'use strict';
@@ -12,6 +12,6 @@ import TreeData from '../../data/data.json';
 
 document.addEventListener('DOMContentLoaded', function() {
     var tree = new Tree('#tree-mount', TreeData, {
-        expandedOnLoad: false
+        expandedOnLoad: true
     });
 });

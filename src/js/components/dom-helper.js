@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 20:32:14
+* @Last Modified time: 2015-09-09 20:48:32
 */
 
 export default class DomHelper {
@@ -47,18 +47,9 @@ export default class DomHelper {
 
     ondrop(e) {
         e.preventDefault();
-        e.dataTransfer.getData('text');
-        alert('hi');
     }
 
     ondragover(e) {
-        console.log('hiii');
         e.preventDefault();
     }
-
-    doDrop() {
-       // do drop
-    }
-
-
 }

@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-08 20:31:09
+* @Last Modified time: 2015-09-09 20:48:10
 */
 import DomHelper from './dom-helper.js';
 
@@ -10,6 +10,8 @@ export default class TreeNode extends DomHelper {
     constructor(nodeData, options, index) {
         super();
         this.element = this.get('li', [], null, null);
+        this.name = nodeData.name;
+        this.children = nodeData.children || [];
 
         this.defaults = {
             dragEvents: [
@@ -53,7 +55,6 @@ export default class TreeNode extends DomHelper {
         }
 
         this.element.appendChild(this.getDisplayText(nodeData.name));
-
     }
 
     getDisplayText(name) {
@@ -122,20 +123,60 @@ export default class TreeNode extends DomHelper {
     ondrop(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.doDrop();
+
+        if (true) {
+            this.doDrop(e);
+            this.element.classList.remove(this.options.dragoverClass);
+            this.handleNodeCopy(true);
+        }
+
+        else {
+           this.handleNodeCopy(false);
+        }
+    }
+
+    doDrop(e) {
+        var parentOL = this.element.parentNode;
+        var nodeData = JSON.parse(e.dataTransfer.getData('text'));
+        var newNode = new TreeNode(nodeData, this.options);
+        
+        parentOL.insertBefore(newNode.element, this.element);
+    }
+
+    toJSON() {
+        const SERIALIZEABLE_KEYS = ['name', 'children'];
+
+        if (this.json) return this.json;
+
+        this.json =  {};
+
+        SERIALIZEABLE_KEYS.forEach((k) => {
+            this.json[k] = this[k];
+        }, this);
+
+        return this.json;
     }
 
     ondragstart(e) {
-        e.dataTransfer.setData('text', JSON.stringify(this));
-        // this.element.remove();
+        e.stopPropagation();
+        e.dataTransfer.setData('text', JSON.stringify(this.toJSON()));
+        e.target.classList.add(this.options.nodeCopyClass);
     }
 
     ondragover(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
-        
-        this.element.classList[e.type === 'dragover' ? 'add' : 'remove'](this.options.prefix + 'dragover');
+        this.element.classList[e.type === 'dragover' ? 'add' : 'remove'](this.options.dragoverClass);
+    }
 
+    handleNodeCopy(destroy) {
+        if (destroy) {
+            document.querySelector('.' + this.options.nodeCopyClass).remove();
+        }
+
+        else {
+            document.querySelector('.' + this.options.nodeCopyClass).classList.remove(this.options.nodeCopyClass);
+        }
     }
 
     ondragend(e) {
