@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-09 20:48:21
+* @Last Modified time: 2015-09-10 08:48:58
 */
 
 import DomHelper from './dom-helper.js';
@@ -31,10 +31,10 @@ export default class Tree extends DomHelper {
             draggable: true,
             destroyable: true,
             expandedOnLoad: true,
-            onDestroy: function(node) {},
-            onExpand: function(node) {},
-            onCollapse: function(node) {},
-            onMove: function(node) {}
+            afterDestroy: function(node) {},
+            afterExpand: function(node) {},
+            afterCollapse: function(node) {},
+            afterMove: function(node) {}
         };
 
         this.options = Object.assign(this.defaults, options);
@@ -67,7 +67,7 @@ export default class Tree extends DomHelper {
         if (this.options.expandedOnLoad) classList.push('visible');
 
         nodes.forEach(function(node, i) {
-            Node = new TreeNode(node, this.options, i);
+            Node = new TreeNode(node, this.options, this);
             ol.appendChild(Node.element);
 
             if (node.children) {

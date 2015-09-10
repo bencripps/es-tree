@@ -1,4 +1,5 @@
 .#{$prefix}node {
+    font-size: $tree-font-size;
     list-style-type: none;
     padding-top: 0px;
     position: relative;
@@ -17,7 +18,7 @@
     }
 
     &.#{$prefix}dragover {
-        padding-top: 15px;
+        padding-top: $hover-padding;
     }
 
 }

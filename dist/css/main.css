@@ -13,11 +13,12 @@
   transition-property: max-height;
   transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); }
   .es6-tree-leaf.es6-tree-visible {
-    max-height: 300px; }
+    max-height: 350px; }
   .es6-tree-leaf.es6-tree-top-level {
     max-height: 1000000px !important; }
 
 .es6-tree-node {
+  font-size: 14px;
   list-style-type: none;
   padding-top: 0px;
   position: relative;
@@ -31,6 +32,6 @@
     .es6-tree-node .es6-tree-icon.hidden {
       visibility: hidden; }
   .es6-tree-node.es6-tree-dragover {
-    padding-top: 15px; }
+    padding-top: 30px; }
 
 /*# sourceMappingURL=main.css.map */

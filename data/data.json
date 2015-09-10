@@ -44,7 +44,17 @@
                             "name": "Palm Reader"
                         },
                         {
-                            "name": "No Closer To Heaven"
+                            "name": "No Closer To Heaven",
+                            "children": [
+                                {
+                                    "name": "TO BE DELETED",
+                                    "children": [
+                                        {
+                                            "name": "TO BE DELETED"
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }

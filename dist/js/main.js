@@ -45,7 +45,17 @@ module.exports={
                             "name": "Palm Reader"
                         },
                         {
-                            "name": "No Closer To Heaven"
+                            "name": "No Closer To Heaven",
+                            "children": [
+                                {
+                                    "name": "TO BE DELETED",
+                                    "children": [
+                                        {
+                                            "name": "TO BE DELETED"
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -295,7 +305,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-09 20:48:10
+* @Last Modified time: 2015-09-10 09:44:13
 */
 'use strict';
 
@@ -320,13 +330,14 @@ var _domHelperJs2 = _interopRequireDefault(_domHelperJs);
 var TreeNode = (function (_DomHelper) {
     _inherits(TreeNode, _DomHelper);
 
-    function TreeNode(nodeData, options, index) {
+    function TreeNode(nodeData, options, tree) {
         _classCallCheck(this, TreeNode);
 
         _get(Object.getPrototypeOf(TreeNode.prototype), 'constructor', this).call(this);
         this.element = this.get('li', [], null, null);
         this.name = nodeData.name;
         this.children = nodeData.children || [];
+        this.tree = tree;
 
         this.defaults = {
             dragEvents: [{
@@ -419,9 +430,9 @@ var TreeNode = (function (_DomHelper) {
 
                 if (_this3.isEqual('array', _this3.options.icons.noChildren, Array.from(_this3.icon.classList))) return false;
 
-                var isExpanding = _this3.icon.classList.contains(_this3.options.icons.expandIcon[1]),
+                var isExpanding = _this3.isEqual('array', Array.from(_this3.icon.classList), _this3.options.icons.expandIcon),
                     classList = isExpanding ? _this3.options.icons.collapseIcon : _this3.options.icons.expandIcon,
-                    eventFunc = isExpanding ? _this3.options.onExpand : _this3.options.onCollapse,
+                    eventFunc = isExpanding ? _this3.options.afterExpand : _this3.options.afterCollapse,
                     classesToString = classList.toString().replace(/,/g, ' ');
 
                 _this3.icon.className = classesToString;
@@ -444,49 +455,71 @@ var TreeNode = (function (_DomHelper) {
 
             if (true) {
                 this.doDrop(e);
-                this.element.classList.remove(this.options.dragoverClass);
                 this.handleNodeCopy(true);
             } else {
                 this.handleNodeCopy(false);
             }
+
+            this.removeDragoverClass();
         }
     }, {
         key: 'doDrop',
         value: function doDrop(e) {
             var parentOL = this.element.parentNode;
             var nodeData = JSON.parse(e.dataTransfer.getData('text'));
-            var newNode = new TreeNode(nodeData, this.options);
+            var newNode = new TreeNode(nodeData, this.options, this.tree);
+
+            if (nodeData.children && nodeData.children.length > 0) this.addChildNodes(newNode, nodeData.children);
 
             parentOL.insertBefore(newNode.element, this.element);
+
+            if (this.options.afterMove) this.options.afterMove.call(e, this);
+        }
+    }, {
+        key: 'addChildNodes',
+        value: function addChildNodes(newNode, children) {
+            var startOL = this.get('ol', ['leaf', 'visible']);
+            this.tree.buildHTML.call(this.tree, children, startOL);
+
+            newNode.element.appendChild(startOL);
+        }
+    }, {
+        key: 'removeDragoverClass',
+        value: function removeDragoverClass() {
+            var _this4 = this;
+
+            Array.from(document.querySelectorAll('.' + this.options.nodeClass)).forEach(function (node) {
+                node.classList.remove(_this4.options.dragoverClass);
+            }, this);
         }
     }, {
         key: 'toJSON',
-        value: function toJSON() {
-            var _this4 = this;
+        value: function toJSON(dataObj, element) {
+            var _this5 = this;
 
-            var SERIALIZEABLE_KEYS = ['name', 'children'];
+            dataObj.name = element.querySelector('span').innerHTML;
+            dataObj.children = [];
 
-            if (this.json) return this.json;
-
-            this.json = {};
-
-            SERIALIZEABLE_KEYS.forEach(function (k) {
-                _this4.json[k] = _this4[k];
+            Array.from(element.querySelectorAll('li')).forEach(function (node) {
+                if (node.parentNode.parentNode.isSameNode(element)) {
+                    dataObj.children.push(_this5.toJSON({}, node));
+                }
             }, this);
 
-            return this.json;
+            return dataObj;
         }
     }, {
         key: 'ondragstart',
         value: function ondragstart(e) {
             e.stopPropagation();
-            e.dataTransfer.setData('text', JSON.stringify(this.toJSON()));
+            e.dataTransfer.setData('text', JSON.stringify(this.toJSON({}, this.element)));
             e.target.classList.add(this.options.nodeCopyClass);
         }
     }, {
         key: 'ondragover',
         value: function ondragover(e) {
             e.preventDefault();
+            e.stopPropagation();
             e.dataTransfer.dropEffect = 'move';
             this.element.classList[e.type === 'dragover' ? 'add' : 'remove'](this.options.dragoverClass);
         }
@@ -515,7 +548,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-09 20:48:21
+* @Last Modified time: 2015-09-10 08:48:58
 */
 
 'use strict';
@@ -568,10 +601,10 @@ var Tree = (function (_DomHelper) {
             draggable: true,
             destroyable: true,
             expandedOnLoad: true,
-            onDestroy: function onDestroy(node) {},
-            onExpand: function onExpand(node) {},
-            onCollapse: function onCollapse(node) {},
-            onMove: function onMove(node) {}
+            afterDestroy: function afterDestroy(node) {},
+            afterExpand: function afterExpand(node) {},
+            afterCollapse: function afterCollapse(node) {},
+            afterMove: function afterMove(node) {}
         };
 
         this.options = Object.assign(this.defaults, options);
@@ -611,7 +644,7 @@ var Tree = (function (_DomHelper) {
             if (this.options.expandedOnLoad) classList.push('visible');
 
             nodes.forEach(function (node, i) {
-                Node = new _treeNodeJs2['default'](node, this.options, i);
+                Node = new _treeNodeJs2['default'](node, this.options, this);
                 ol.appendChild(Node.element);
 
                 if (node.children) {
@@ -640,7 +673,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:22:43
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-09 19:33:18
+* @Last Modified time: 2015-09-10 09:49:57
 */
 
 'use strict';

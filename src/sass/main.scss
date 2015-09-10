@@ -2,7 +2,10 @@ $prefix: 'es6-tree-';
 $show-duration: .3s;
 $move-duration: .1s;
 $transition-timing-function: cubic-bezier(.17,.67,.83,.67);
-$max-height-for-animation: 300px;
+$max-height-for-animation: 350px;
+$tree-font-size: 14px;
+$hover-padding: 30px;
+
 
 @import "components/general";
 @import "components/tree";
