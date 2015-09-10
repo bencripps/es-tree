@@ -11,10 +11,6 @@
         font-size: 12px;
         left: -13px;
         position: relative;
-
-        &.hidden {
-            visibility: hidden;
-        }
     }
 
     &.#{$prefix}dragover {

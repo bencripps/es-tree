@@ -305,7 +305,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-10 09:44:13
+* @Last Modified time: 2015-09-10 14:42:06
 */
 'use strict';
 
@@ -450,17 +450,27 @@ var TreeNode = (function (_DomHelper) {
     }, {
         key: 'ondrop',
         value: function ondrop(e) {
+
+            var parentLI;
+
             e.stopPropagation();
             e.preventDefault();
 
             if (true) {
+                parentLI = document.querySelector('.' + this.options.nodeCopyClass).parentNode.parentNode;
                 this.doDrop(e);
                 this.handleNodeCopy(true);
+                this.updateIconClasses(parentLI);
             } else {
                 this.handleNodeCopy(false);
             }
 
             this.removeDragoverClass();
+        }
+    }, {
+        key: 'updateIconClasses',
+        value: function updateIconClasses(parentLI) {
+            parentLI.querySelector('i').className = this.getIconClass(this.toJSON({}, parentLI)).join(' ');
         }
     }, {
         key: 'doDrop',

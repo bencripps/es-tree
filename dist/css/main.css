@@ -29,8 +29,6 @@
     font-size: 12px;
     left: -13px;
     position: relative; }
-    .es6-tree-node .es6-tree-icon.hidden {
-      visibility: hidden; }
   .es6-tree-node.es6-tree-dragover {
     padding-top: 30px; }
 

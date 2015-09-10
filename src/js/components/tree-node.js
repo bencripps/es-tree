@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-10 09:44:13
+* @Last Modified time: 2015-09-10 14:42:06
 */
 import DomHelper from './dom-helper.js';
 
@@ -122,12 +122,17 @@ export default class TreeNode extends DomHelper {
     }
 
     ondrop(e) {
+
+        var parentLI;
+
         e.stopPropagation();
         e.preventDefault();
 
         if (true) {
+            parentLI = document.querySelector('.' + this.options.nodeCopyClass).parentNode.parentNode;
             this.doDrop(e);
             this.handleNodeCopy(true);
+            this.updateIconClasses(parentLI);
         }
 
         else {
@@ -135,6 +140,10 @@ export default class TreeNode extends DomHelper {
         }
 
         this.removeDragoverClass();
+    }
+
+    updateIconClasses(parentLI) {
+        parentLI.querySelector('i').className = this.getIconClass(this.toJSON({}, parentLI)).join(' ');
     }
 
     doDrop(e) {
