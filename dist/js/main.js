@@ -227,7 +227,7 @@ module.exports={
 * @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-09 20:48:32
+* @Last Modified time: 2015-09-11 13:18:48
 */
 
 'use strict';
@@ -271,6 +271,11 @@ var DomHelper = (function () {
             return node;
         }
     }, {
+        key: 'destroy',
+        value: function destroy(selector) {
+            if (selector) selector.remove();
+        }
+    }, {
         key: 'isEqual',
         value: function isEqual(type, obj1, obj2) {
 
@@ -305,7 +310,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-10 14:42:06
+* @Last Modified time: 2015-09-11 13:57:56
 */
 'use strict';
 
@@ -432,10 +437,9 @@ var TreeNode = (function (_DomHelper) {
 
                 var isExpanding = _this3.isEqual('array', Array.from(_this3.icon.classList), _this3.options.icons.expandIcon),
                     classList = isExpanding ? _this3.options.icons.collapseIcon : _this3.options.icons.expandIcon,
-                    eventFunc = isExpanding ? _this3.options.afterExpand : _this3.options.afterCollapse,
-                    classesToString = classList.toString().replace(/,/g, ' ');
+                    eventFunc = isExpanding ? _this3.options.afterExpand : _this3.options.afterCollapse;
 
-                _this3.icon.className = classesToString;
+                _this3.icon.className = classList.toString().replace(/,/g, ' ');
 
                 _this3.element.querySelector('ol').classList[isExpanding ? 'add' : 'remove'](_this3.options.prefix + 'visible');
 
@@ -450,15 +454,13 @@ var TreeNode = (function (_DomHelper) {
     }, {
         key: 'ondrop',
         value: function ondrop(e) {
-
-            var parentLI;
+            var parentLI = document.querySelector('.' + this.options.nodeCopyClass).parentNode.parentNode;
 
             e.stopPropagation();
             e.preventDefault();
 
             if (true) {
-                parentLI = document.querySelector('.' + this.options.nodeCopyClass).parentNode.parentNode;
-                this.doDrop(e);
+                this.doDrop(e, e.offsetX > 50);
                 this.handleNodeCopy(true);
                 this.updateIconClasses(parentLI);
             } else {
@@ -470,28 +472,32 @@ var TreeNode = (function (_DomHelper) {
     }, {
         key: 'updateIconClasses',
         value: function updateIconClasses(parentLI) {
+            console.log(this.toJSON({}, parentLI));
             parentLI.querySelector('i').className = this.getIconClass(this.toJSON({}, parentLI)).join(' ');
         }
     }, {
         key: 'doDrop',
-        value: function doDrop(e) {
-            var parentOL = this.element.parentNode;
+        value: function doDrop(e, isInsert) {
             var nodeData = JSON.parse(e.dataTransfer.getData('text'));
             var newNode = new TreeNode(nodeData, this.options, this.tree);
 
             if (nodeData.children && nodeData.children.length > 0) this.addChildNodes(newNode, nodeData.children);
 
-            parentOL.insertBefore(newNode.element, this.element);
+            if (!isInsert) {
+                this.element.parentNode.insertBefore(newNode.element, this.element);
+            } else {
+                this.addChildNodes({ element: this.element.previousSibling || this.element.parentNode.parentNode }, [nodeData]);
+            }
 
             if (this.options.afterMove) this.options.afterMove.call(e, this);
         }
     }, {
         key: 'addChildNodes',
         value: function addChildNodes(newNode, children) {
-            var startOL = this.get('ol', ['leaf', 'visible']);
+            var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', 'visible']);
             this.tree.buildHTML.call(this.tree, children, startOL);
 
-            newNode.element.appendChild(startOL);
+            if (!newNode.element.querySelector('ol')) newNode.element.appendChild(startOL);
         }
     }, {
         key: 'removeDragoverClass',
@@ -536,10 +542,16 @@ var TreeNode = (function (_DomHelper) {
     }, {
         key: 'handleNodeCopy',
         value: function handleNodeCopy(destroy) {
-            if (destroy) {
-                document.querySelector('.' + this.options.nodeCopyClass).remove();
+
+            var nodeToDestory = document.querySelector('.' + this.options.nodeCopyClass);
+            var hasChildren = nodeToDestory.parentNode.querySelectorAll('li').length > 1;
+
+            if (!hasChildren) {
+                nodeToDestory.parentNode.remove();
+            } else if (destroy) {
+                nodeToDestory.remove();
             } else {
-                document.querySelector('.' + this.options.nodeCopyClass).classList.remove(this.options.nodeCopyClass);
+                nodeToDestory.classList.remove(this.options.nodeCopyClass);
             }
         }
     }, {
@@ -558,7 +570,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-10 08:48:58
+* @Last Modified time: 2015-09-11 13:54:40
 */
 
 'use strict';
@@ -585,6 +597,12 @@ var _treeNodeJs = require('./tree-node.js');
 
 var _treeNodeJs2 = _interopRequireDefault(_treeNodeJs);
 
+var PREFIX = 'es6-tree';
+var NODE_CLASS = PREFIX + '-node';
+var NODE_COPY_CLASS = PREFIX + '-node-copy';
+var DRAG_OVER_CLASS = PREFIX + '-dragover';
+var TOP_LEVEL_CLASS = 'top-level';
+
 var Tree = (function (_DomHelper) {
     _inherits(Tree, _DomHelper);
 
@@ -598,11 +616,11 @@ var Tree = (function (_DomHelper) {
         this.verify(selector);
 
         this.defaults = {
-            nodeClass: 'es6-tree-node',
-            prefix: 'es6-tree-',
-            topLevelClass: 'top-level',
-            nodeCopyClass: 'es6-tree-node-copy',
-            dragoverClass: 'es6-tree-dragover',
+            nodeClass: NODE_CLASS,
+            prefix: PREFIX,
+            topLevelClass: TOP_LEVEL_CLASS,
+            nodeCopyClass: NODE_COPY_CLASS,
+            dragoverClass: DRAG_OVER_CLASS,
             icons: {
                 expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
                 collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
@@ -657,7 +675,7 @@ var Tree = (function (_DomHelper) {
                 Node = new _treeNodeJs2['default'](node, this.options, this);
                 ol.appendChild(Node.element);
 
-                if (node.children) {
+                if (node.children && node.children.length > 0) {
                     newOl = this.get('ol', classList, null);
                     this.buildHTML(node.children, newOl);
                     Node.element.appendChild(newOl);

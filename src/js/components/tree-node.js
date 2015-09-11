@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-10 14:42:06
+* @Last Modified time: 2015-09-11 13:57:56
 */
 import DomHelper from './dom-helper.js';
 
@@ -104,15 +104,13 @@ export default class TreeNode extends DomHelper {
 
             var isExpanding = this.isEqual('array', Array.from(this.icon.classList), this.options.icons.expandIcon),
                 classList = isExpanding ? this.options.icons.collapseIcon : this.options.icons.expandIcon,
-                eventFunc = isExpanding ? this.options.afterExpand : this.options.afterCollapse,
-                classesToString = classList.toString().replace(/,/g, ' ');
+                eventFunc = isExpanding ? this.options.afterExpand : this.options.afterCollapse;
 
-            this.icon.className = classesToString;
+            this.icon.className = classList.toString().replace(/,/g, ' ');
 
             this.element.querySelector('ol').classList[isExpanding ? 'add' : 'remove'](this.options.prefix + 'visible');
 
             if (eventFunc) eventFunc.call(e, this);
-
 
         }, this);
     }
@@ -122,15 +120,13 @@ export default class TreeNode extends DomHelper {
     }
 
     ondrop(e) {
-
-        var parentLI;
-
+        var parentLI = document.querySelector('.' + this.options.nodeCopyClass).parentNode.parentNode;
+        
         e.stopPropagation();
         e.preventDefault();
 
         if (true) {
-            parentLI = document.querySelector('.' + this.options.nodeCopyClass).parentNode.parentNode;
-            this.doDrop(e);
+            this.doDrop(e, e.offsetX > 50);
             this.handleNodeCopy(true);
             this.updateIconClasses(parentLI);
         }
@@ -143,26 +139,32 @@ export default class TreeNode extends DomHelper {
     }
 
     updateIconClasses(parentLI) {
+        console.log(this.toJSON({}, parentLI));
         parentLI.querySelector('i').className = this.getIconClass(this.toJSON({}, parentLI)).join(' ');
     }
 
-    doDrop(e) {
-        var parentOL = this.element.parentNode;
+    doDrop(e, isInsert) {
         var nodeData = JSON.parse(e.dataTransfer.getData('text'));
         var newNode = new TreeNode(nodeData, this.options, this.tree);
 
         if (nodeData.children && nodeData.children.length > 0) this.addChildNodes(newNode, nodeData.children); 
         
-        parentOL.insertBefore(newNode.element, this.element);
+        if (!isInsert) {
+            this.element.parentNode.insertBefore(newNode.element, this.element);
+        }
+
+        else {
+            this.addChildNodes({element: this.element.previousSibling || this.element.parentNode.parentNode }, [nodeData]);
+        }
 
         if (this.options.afterMove) this.options.afterMove.call(e, this);
     }
 
     addChildNodes(newNode, children) {
-        var startOL = this.get('ol', ['leaf', 'visible']);
+        var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', 'visible']);
         this.tree.buildHTML.call(this.tree, children, startOL);
 
-        newNode.element.appendChild(startOL);
+        if (!newNode.element.querySelector('ol')) newNode.element.appendChild(startOL);
     }
 
     removeDragoverClass() {
@@ -198,12 +200,20 @@ export default class TreeNode extends DomHelper {
     }
 
     handleNodeCopy(destroy) {
-        if (destroy) {
-            document.querySelector('.' + this.options.nodeCopyClass).remove();
+
+        var nodeToDestory = document.querySelector('.' + this.options.nodeCopyClass);
+        var hasChildren = nodeToDestory.parentNode.querySelectorAll('li').length > 1;
+
+        if (!hasChildren) {
+            nodeToDestory.parentNode.remove();
+        }
+
+        else if (destroy) {
+            nodeToDestory.remove();
         }
 
         else {
-            document.querySelector('.' + this.options.nodeCopyClass).classList.remove(this.options.nodeCopyClass);
+            nodeToDestory.classList.remove(this.options.nodeCopyClass);
         }
     }
 

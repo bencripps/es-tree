@@ -2,11 +2,17 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-10 08:48:58
+* @Last Modified time: 2015-09-11 13:54:40
 */
 
 import DomHelper from './dom-helper.js';
 import TreeNode from './tree-node.js';
+
+const PREFIX = 'es6-tree';
+const NODE_CLASS = PREFIX + '-node';
+const NODE_COPY_CLASS = PREFIX + '-node-copy';
+const DRAG_OVER_CLASS = PREFIX + '-dragover';
+const TOP_LEVEL_CLASS = 'top-level';
 
 export default class Tree extends DomHelper {
 
@@ -18,11 +24,11 @@ export default class Tree extends DomHelper {
         this.verify(selector);
 
         this.defaults = {
-            nodeClass: 'es6-tree-node',
-            prefix: 'es6-tree-',
-            topLevelClass:'top-level',
-            nodeCopyClass: 'es6-tree-node-copy',
-            dragoverClass: 'es6-tree-dragover',
+            nodeClass: NODE_CLASS,
+            prefix: PREFIX,
+            topLevelClass: TOP_LEVEL_CLASS,
+            nodeCopyClass: NODE_COPY_CLASS,
+            dragoverClass: DRAG_OVER_CLASS,
             icons: {
                 expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
                 collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
@@ -70,7 +76,7 @@ export default class Tree extends DomHelper {
             Node = new TreeNode(node, this.options, this);
             ol.appendChild(Node.element);
 
-            if (node.children) {
+            if (node.children && node.children.length > 0) {
                 newOl = this.get('ol', classList, null);
                 this.buildHTML(node.children, newOl);
                 Node.element.appendChild(newOl);
