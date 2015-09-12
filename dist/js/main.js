@@ -310,7 +310,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-11 13:57:56
+* @Last Modified time: 2015-09-12 09:04:23
 */
 'use strict';
 
@@ -472,29 +472,36 @@ var TreeNode = (function (_DomHelper) {
     }, {
         key: 'updateIconClasses',
         value: function updateIconClasses(parentLI) {
-            console.log(this.toJSON({}, parentLI));
             parentLI.querySelector('i').className = this.getIconClass(this.toJSON({}, parentLI)).join(' ');
+        }
+    }, {
+        key: 'isCurrentNodeExpanded',
+        value: function isCurrentNodeExpanded(node) {
+            return this.isEqual('array', Array.from(node.querySelector('i').classList), this.options.icons.collapseIcon);
         }
     }, {
         key: 'doDrop',
         value: function doDrop(e, isInsert) {
             var nodeData = JSON.parse(e.dataTransfer.getData('text'));
+            var isExpanded = this.isCurrentNodeExpanded(document.querySelector('.' + this.options.nodeCopyClass));
             var newNode = new TreeNode(nodeData, this.options, this.tree);
+            var insertedParent = this.element.previousSibling || this.element.parentNode.parentNode;
 
-            if (nodeData.children && nodeData.children.length > 0) this.addChildNodes(newNode, nodeData.children);
+            if (nodeData.children && nodeData.children.length > 0) this.addChildNodes(newNode, nodeData.children, isExpanded);
 
             if (!isInsert) {
                 this.element.parentNode.insertBefore(newNode.element, this.element);
             } else {
-                this.addChildNodes({ element: this.element.previousSibling || this.element.parentNode.parentNode }, [nodeData]);
+                this.addChildNodes({ element: insertedParent }, [nodeData]);
+                this.updateIconClasses(insertedParent);
             }
 
             if (this.options.afterMove) this.options.afterMove.call(e, this);
         }
     }, {
         key: 'addChildNodes',
-        value: function addChildNodes(newNode, children) {
-            var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', 'visible']);
+        value: function addChildNodes(newNode, children, isExpanded) {
+            var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', isExpanded || isExpanded === undefined ? 'visible' : '']);
             this.tree.buildHTML.call(this.tree, children, startOL);
 
             if (!newNode.element.querySelector('ol')) newNode.element.appendChild(startOL);
@@ -546,7 +553,7 @@ var TreeNode = (function (_DomHelper) {
             var nodeToDestory = document.querySelector('.' + this.options.nodeCopyClass);
             var hasChildren = nodeToDestory.parentNode.querySelectorAll('li').length > 1;
 
-            if (!hasChildren) {
+            if (destroy && !hasChildren) {
                 nodeToDestory.parentNode.remove();
             } else if (destroy) {
                 nodeToDestory.remove();
@@ -570,7 +577,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-11 13:54:40
+* @Last Modified time: 2015-09-12 09:11:13
 */
 
 'use strict';
@@ -597,10 +604,10 @@ var _treeNodeJs = require('./tree-node.js');
 
 var _treeNodeJs2 = _interopRequireDefault(_treeNodeJs);
 
-var PREFIX = 'es6-tree';
-var NODE_CLASS = PREFIX + '-node';
-var NODE_COPY_CLASS = PREFIX + '-node-copy';
-var DRAG_OVER_CLASS = PREFIX + '-dragover';
+var PREFIX = 'es6-tree-';
+var NODE_CLASS = PREFIX + 'node';
+var NODE_COPY_CLASS = PREFIX + 'node-copy';
+var DRAG_OVER_CLASS = PREFIX + 'dragover';
 var TOP_LEVEL_CLASS = 'top-level';
 
 var Tree = (function (_DomHelper) {
@@ -665,19 +672,22 @@ var Tree = (function (_DomHelper) {
     }, {
         key: 'buildHTML',
         value: function buildHTML(nodes, ol) {
+            var _this = this;
+
             var Node,
                 newOl,
                 classList = ['leaf'];
+            // to do: figure out how to tell if dropped nodes need the expand icon or collapse icon
 
             if (this.options.expandedOnLoad) classList.push('visible');
 
             nodes.forEach(function (node, i) {
-                Node = new _treeNodeJs2['default'](node, this.options, this);
+                Node = new _treeNodeJs2['default'](node, _this.options, _this);
                 ol.appendChild(Node.element);
 
                 if (node.children && node.children.length > 0) {
-                    newOl = this.get('ol', classList, null);
-                    this.buildHTML(node.children, newOl);
+                    newOl = _this.get('ol', classList, null);
+                    _this.buildHTML(node.children, newOl);
                     Node.element.appendChild(newOl);
                 }
             }, this);

@@ -2,16 +2,16 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-11 13:54:40
+* @Last Modified time: 2015-09-12 09:11:13
 */
 
 import DomHelper from './dom-helper.js';
 import TreeNode from './tree-node.js';
 
-const PREFIX = 'es6-tree';
-const NODE_CLASS = PREFIX + '-node';
-const NODE_COPY_CLASS = PREFIX + '-node-copy';
-const DRAG_OVER_CLASS = PREFIX + '-dragover';
+const PREFIX = 'es6-tree-';
+const NODE_CLASS = PREFIX + 'node';
+const NODE_COPY_CLASS = PREFIX + 'node-copy';
+const DRAG_OVER_CLASS = PREFIX + 'dragover';
 const TOP_LEVEL_CLASS = 'top-level';
 
 export default class Tree extends DomHelper {
@@ -69,10 +69,11 @@ export default class Tree extends DomHelper {
 
     buildHTML(nodes, ol) {
         var Node, newOl, classList = ['leaf'];
+        // to do: figure out how to tell if dropped nodes need the expand icon or collapse icon
 
         if (this.options.expandedOnLoad) classList.push('visible');
 
-        nodes.forEach(function(node, i) {
+        nodes.forEach((node, i) => {
             Node = new TreeNode(node, this.options, this);
             ol.appendChild(Node.element);
 
