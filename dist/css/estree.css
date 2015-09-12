@@ -1,23 +1,23 @@
-.es6-tree-container {
+.es-tree-container {
   margin: 0px auto;
   margin-top: 20px;
   width: 80%; }
-  .es6-tree-container.center {
+  .es-tree-container.center {
     text-align: center; }
 
-.es6-tree-leaf {
+.es-tree-leaf {
   list-style-type: none;
   max-height: 0px;
   overflow: hidden;
   transition-duration: 0.3s;
   transition-property: max-height;
   transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); }
-  .es6-tree-leaf.es6-tree-visible {
+  .es-tree-leaf.es-tree-visible {
     max-height: 350px; }
-  .es6-tree-leaf.es6-tree-top-level {
+  .es-tree-leaf.es-tree-top-level {
     max-height: 1000000px !important; }
 
-.es6-tree-node {
+.es-tree-node {
   font-size: 14px;
   list-style-type: none;
   padding-top: 0px;
@@ -25,11 +25,11 @@
   transition-duration: 0.1s;
   transition-property: padding-top;
   transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); }
-  .es6-tree-node .es6-tree-icon {
+  .es-tree-node .es-tree-icon {
     font-size: 12px;
     left: -13px;
     position: relative; }
-  .es6-tree-node.es6-tree-dragover {
+  .es-tree-node.es-tree-dragover {
     padding-top: 30px; }
 
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=estree.css.map */

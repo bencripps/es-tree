@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 09:04:23
+* @Last Modified time: 2015-09-12 14:55:32
 */
 import DomHelper from './dom-helper.js';
 
@@ -126,7 +126,7 @@ export default class TreeNode extends DomHelper {
         e.preventDefault();
 
         if (true) {
-            this.doDrop(e, e.offsetX > 50);
+            this.doDrop(e, e.offsetX > this.options.hintWidth);
             this.handleNodeCopy(true);
             this.updateIconClasses(parentLI);
         }
@@ -167,7 +167,7 @@ export default class TreeNode extends DomHelper {
     }
 
     addChildNodes(newNode, children, isExpanded) {
-        var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', (isExpanded || isExpanded === undefined ? 'visible' : '')]);
+        var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', (isExpanded || isExpanded === undefined ? 'visible' : null)]);
         this.tree.buildHTML.call(this.tree, children, startOL);
 
         if (!newNode.element.querySelector('ol')) newNode.element.appendChild(startOL);

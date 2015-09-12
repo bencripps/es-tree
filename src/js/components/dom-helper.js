@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-11 13:18:48
+* @Last Modified time: 2015-09-12 14:20:32
 */
 
 export default class DomHelper {
@@ -15,7 +15,7 @@ export default class DomHelper {
 
         if (classes) {
             classes.forEach((cls) => {
-                node.classList.add(this.options.prefix + cls);
+                if (cls) node.classList.add(this.options.prefix + cls);
             }, this);
         }
 

@@ -227,7 +227,7 @@ module.exports={
 * @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-11 13:18:48
+* @Last Modified time: 2015-09-12 14:20:32
 */
 
 'use strict';
@@ -254,7 +254,7 @@ var DomHelper = (function () {
 
             if (classes) {
                 classes.forEach(function (cls) {
-                    node.classList.add(_this.options.prefix + cls);
+                    if (cls) node.classList.add(_this.options.prefix + cls);
                 }, this);
             }
 
@@ -310,7 +310,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 09:04:23
+* @Last Modified time: 2015-09-12 14:55:32
 */
 'use strict';
 
@@ -460,7 +460,7 @@ var TreeNode = (function (_DomHelper) {
             e.preventDefault();
 
             if (true) {
-                this.doDrop(e, e.offsetX > 50);
+                this.doDrop(e, e.offsetX > this.options.hintWidth);
                 this.handleNodeCopy(true);
                 this.updateIconClasses(parentLI);
             } else {
@@ -501,7 +501,7 @@ var TreeNode = (function (_DomHelper) {
     }, {
         key: 'addChildNodes',
         value: function addChildNodes(newNode, children, isExpanded) {
-            var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', isExpanded || isExpanded === undefined ? 'visible' : '']);
+            var startOL = newNode.element.querySelector('ol') || this.get('ol', ['leaf', isExpanded || isExpanded === undefined ? 'visible' : null]);
             this.tree.buildHTML.call(this.tree, children, startOL);
 
             if (!newNode.element.querySelector('ol')) newNode.element.appendChild(startOL);
@@ -577,7 +577,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 09:11:13
+* @Last Modified time: 2015-09-12 15:05:21
 */
 
 'use strict';
@@ -604,11 +604,15 @@ var _treeNodeJs = require('./tree-node.js');
 
 var _treeNodeJs2 = _interopRequireDefault(_treeNodeJs);
 
-var PREFIX = 'es6-tree-';
+var PREFIX = 'es-tree-';
 var NODE_CLASS = PREFIX + 'node';
 var NODE_COPY_CLASS = PREFIX + 'node-copy';
 var DRAG_OVER_CLASS = PREFIX + 'dragover';
 var TOP_LEVEL_CLASS = 'top-level';
+var HINT_WIDTH = 60;
+var EXPANDED_ICON_CLASSLIST = ['fa', 'fa-plus', PREFIX + 'icon'];
+var COLLAPED_ICON_CLASSLIST = ['fa', 'fa-minus', PREFIX + 'icon'];
+var NO_CHILDREN_ICON_CLASSLIST = ['fa', 'fa-circle-thin', PREFIX + 'icon'];
 
 var Tree = (function (_DomHelper) {
     _inherits(Tree, _DomHelper);
@@ -628,10 +632,11 @@ var Tree = (function (_DomHelper) {
             topLevelClass: TOP_LEVEL_CLASS,
             nodeCopyClass: NODE_COPY_CLASS,
             dragoverClass: DRAG_OVER_CLASS,
+            hintWidth: HINT_WIDTH,
             icons: {
-                expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
-                collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
-                noChildren: ['fa', 'fa-circle-thin', 'es6-tree-icon']
+                expandIcon: EXPANDED_ICON_CLASSLIST,
+                collapseIcon: COLLAPED_ICON_CLASSLIST,
+                noChildren: NO_CHILDREN_ICON_CLASSLIST
             },
             draggable: true,
             destroyable: true,
@@ -677,7 +682,6 @@ var Tree = (function (_DomHelper) {
             var Node,
                 newOl,
                 classList = ['leaf'];
-            // to do: figure out how to tell if dropped nodes need the expand icon or collapse icon
 
             if (this.options.expandedOnLoad) classList.push('visible');
 

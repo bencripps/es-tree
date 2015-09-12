@@ -15,9 +15,9 @@
   "dependencies": {
   },
   "scripts": {
-    "build-js": "browserify src/js/*.js -t babelify --outfile dist/js/main.js",
-    "watch-js": "watchify src/js/*.js -t babelify --outfile dist/js/main.js",
-    "build-styles": "sass src/sass/main.scss dist/css/main.css",
-    "watch-styles": "sass --watch src/sass/main.scss:dist/css/main.css"
+    "build-js": "browserify src/js/*.js -t babelify --outfile dist/js/estree.js",
+    "watch-js": "watchify src/js/*.js -t babelify --outfile dist/js/estree.js",
+    "build-styles": "sass src/sass/main.scss dist/css/estree.css",
+    "watch-styles": "sass --watch src/sass/main.scss:dist/css/estree.css"
   }
 }

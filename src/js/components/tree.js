@@ -2,17 +2,21 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 09:11:13
+* @Last Modified time: 2015-09-12 15:05:21
 */
 
 import DomHelper from './dom-helper.js';
 import TreeNode from './tree-node.js';
 
-const PREFIX = 'es6-tree-';
+const PREFIX = 'es-tree-';
 const NODE_CLASS = PREFIX + 'node';
 const NODE_COPY_CLASS = PREFIX + 'node-copy';
 const DRAG_OVER_CLASS = PREFIX + 'dragover';
 const TOP_LEVEL_CLASS = 'top-level';
+const HINT_WIDTH = 60;
+const EXPANDED_ICON_CLASSLIST = ['fa', 'fa-plus', PREFIX + 'icon'];
+const COLLAPED_ICON_CLASSLIST = ['fa', 'fa-minus', PREFIX + 'icon'];
+const NO_CHILDREN_ICON_CLASSLIST = ['fa', 'fa-circle-thin', PREFIX + 'icon'];
 
 export default class Tree extends DomHelper {
 
@@ -29,10 +33,11 @@ export default class Tree extends DomHelper {
             topLevelClass: TOP_LEVEL_CLASS,
             nodeCopyClass: NODE_COPY_CLASS,
             dragoverClass: DRAG_OVER_CLASS,
+            hintWidth: HINT_WIDTH,
             icons: {
-                expandIcon: ['fa', 'fa-plus', 'es6-tree-icon'],
-                collapseIcon: ['fa', 'fa-minus', 'es6-tree-icon'],
-                noChildren: ['fa', 'fa-circle-thin', 'es6-tree-icon']
+                expandIcon: EXPANDED_ICON_CLASSLIST,
+                collapseIcon: COLLAPED_ICON_CLASSLIST,
+                noChildren: NO_CHILDREN_ICON_CLASSLIST
             },
             draggable: true,
             destroyable: true,
@@ -69,7 +74,6 @@ export default class Tree extends DomHelper {
 
     buildHTML(nodes, ol) {
         var Node, newOl, classList = ['leaf'];
-        // to do: figure out how to tell if dropped nodes need the expand icon or collapse icon
 
         if (this.options.expandedOnLoad) classList.push('visible');
 
