@@ -427,7 +427,7 @@ module.exports = exports['default'];
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-13 09:43:39
+* @Last Modified time: 2015-09-13 18:40:50
 */
 
 'use strict';
@@ -465,6 +465,13 @@ var COLLAPED_ICON_CLASSLIST = ['fa', 'fa-minus', PREFIX + 'icon'];
 var NO_CHILDREN_ICON_CLASSLIST = ['fa', 'fa-circle-thin', PREFIX + 'icon'];
 var DESTROYABLE_ICON_CLASSLIST = ['fa', 'fa-remove', PREFIX + 'icon', PREFIX + 'remove'];
 var SHOW_DESTROY_ICON_CLASS = PREFIX + 'show';
+var AFTER_DESTROY = function AFTER_DESTROY(element, nodeData) {};
+var AFTER_EXPAND = function AFTER_EXPAND(element, nodeData) {};
+var AFTER_COLLAPSE = function AFTER_COLLAPSE(element, nodeData) {};
+var AFTER_MOVE = function AFTER_MOVE(element, nodeData) {};
+var IS_DRAGGABLE = true;
+var IS_DESTROYABLE = true;
+var EXPANDED_ON_LOAD = true;
 
 var Tree = (function (_DomHelper) {
     _inherits(Tree, _DomHelper);
@@ -491,13 +498,13 @@ var Tree = (function (_DomHelper) {
                 destroyIcon: DESTROYABLE_ICON_CLASSLIST,
                 showDestroyIconClass: SHOW_DESTROY_ICON_CLASS
             },
-            draggable: true,
-            destroyable: true,
-            expandedOnLoad: true,
-            afterDestroy: function afterDestroy(element, nodeData) {},
-            afterExpand: function afterExpand(element, nodeData) {},
-            afterCollapse: function afterCollapse(element, nodeData) {},
-            afterMove: function afterMove(element, nodeData) {}
+            draggable: IS_DRAGGABLE,
+            destroyable: IS_DESTROYABLE,
+            expandedOnLoad: EXPANDED_ON_LOAD,
+            afterDestroy: AFTER_DESTROY,
+            afterExpand: AFTER_EXPAND,
+            afterCollapse: AFTER_COLLAPSE,
+            afterMove: AFTER_MOVE
         };
 
         this.options = Object.assign(this.defaults, options);
@@ -509,7 +516,7 @@ var Tree = (function (_DomHelper) {
         value: function verify(selector) {
             if (!this.element) throw Error('No document node with ' + selector + ' selector could be found!');
 
-            if (!this.data) throw Error('Data must been provided in order to build tree');
+            if (!this.data) throw Error('Data must been provided in order to build tree!');
         }
     }, {
         key: 'init',

@@ -29,7 +29,7 @@
   "main": "dist/js/estree.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bencripps/estree.git"
+    "url": "git+https://github.com/bencripps/es-tree.git"
   },
   "keywords": [
     "tree",
@@ -40,7 +40,7 @@
   "author": "Benjamin Cripps",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bencripps/estree/issues"
+    "url": "https://github.com/bencripps/es-tree/issues"
   },
-  "homepage": "https://github.com/bencripps/estree#readme"
+  "homepage": "https://github.com/bencripps/es-tree#readme"
 }

@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-13 09:42:25
+* @Last Modified time: 2015-09-13 20:04:39
 */
 import DomHelper from './dom-helper.js';
 
@@ -234,7 +234,7 @@ export default class TreeNode extends DomHelper {
         }
 
         else {
-            console.log(insertedParent);
+            // do nothing -- we want to expand nodes if theyre being inserted
         }
 
     }
