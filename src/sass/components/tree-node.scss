@@ -11,10 +11,23 @@
         font-size: 12px;
         left: -13px;
         position: relative;
+
+        &.#{$prefix}remove {
+            left: 4px !important;
+            opacity: 0;
+            transition-duration: $move-duration;
+            transition-property: opacity;
+            transition-timing-function: $transition-timing-function;
+
+            &.#{$prefix}show {
+                opacity: 1;
+            }
+        }
     }
 
     &.#{$prefix}dragover {
         padding-top: $hover-padding;
     }
+
 
 }

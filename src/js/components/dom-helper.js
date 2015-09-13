@@ -2,12 +2,12 @@
 * @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 14:20:32
+* @Last Modified time: 2015-09-13 09:06:31
 */
 
 export default class DomHelper {
-    constructor() {
-
+    constructor(selector) {
+        this.element = document.querySelector(selector);
     }
 
     get(type, classes, text, events) {
@@ -31,10 +31,6 @@ export default class DomHelper {
         }
 
         return node;
-    }
-
-    destroy(selector) {
-        if (selector) selector.remove();
     }
 
     isEqual(type, obj1, obj2) {

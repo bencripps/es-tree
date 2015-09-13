@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 14:55:32
+* @Last Modified time: 2015-09-13 09:42:25
 */
 import DomHelper from './dom-helper.js';
 
@@ -40,6 +40,16 @@ export default class TreeNode extends DomHelper {
                     name: 'drop',
                     fn: this.ondrop
                 }
+            ],
+            mouseEvents: [
+                {
+                    name: 'mouseover',
+                    fn: this.showDestroyIcon
+                },
+                {
+                    name: 'mouseout',
+                    fn: this.showDestroyIcon
+                }
             ]
         };
 
@@ -49,13 +59,38 @@ export default class TreeNode extends DomHelper {
 
         this.element.appendChild(this.getIcon(nodeData));
 
-        this.initIconEvents(nodeData);
-
         if (this.options.draggable) {
             this.initDragEvents();
         }
 
         this.element.appendChild(this.getDisplayText(nodeData.name));
+
+        if (this.options.destroyable) {
+            this.addDestroyIcon();
+        }
+
+        this.initIconEvents(nodeData);
+    }
+
+    addDestroyIcon() {
+        this.destroyIcon = this.get('i', []);
+
+        this.options.icons.destroyIcon.forEach((cls) => {
+            this.destroyIcon.classList.add(cls);
+        }, this); 
+
+        this.destroyIcon.addEventListener('click', this.destroy.bind(this));
+
+        this.options.mouseEvents.forEach((eventObj) => {
+            this.element.addEventListener(eventObj.name, eventObj.fn.bind(this));
+        }, this);
+
+        this.element.appendChild(this.destroyIcon);
+    }
+
+    showDestroyIcon(e) {
+        e.stopPropagation();
+        this.destroyIcon.classList[e.type === 'mouseover' ? 'add' : 'remove'](this.options.icons.showDestroyIconClass);
     }
 
     getDisplayText(name) {
@@ -72,7 +107,22 @@ export default class TreeNode extends DomHelper {
         return this.icon;
     }
 
-    getIconClass(nodeData) {
+    destroy() {
+        var args = this.getNodeDataForCustomFunction(this.element),
+            parentLI = this.element.parentNode.parentNode;
+
+        if (this.toJSON({}, parentLI).children.length === 1) {
+            this.element.parentNode.remove();
+            this.updateIconClasses(parentLI);
+        }
+        else {
+            this.element.remove();
+        }
+
+        if (this.options.afterDestroy) this.options.afterDestroy.apply(this, args);
+    }
+
+    getIconClass(nodeData, isDestroyIcon) {
 
         var classlist;
 
@@ -82,6 +132,10 @@ export default class TreeNode extends DomHelper {
 
         else {
             classlist = this.options.expandedOnLoad ? this.options.icons.collapseIcon : this.options.icons.expandIcon;
+        }
+
+        if (isDestroyIcon) {
+            classlist = this.options.icons.destroyIcon;
         }
 
         return classlist;
@@ -110,7 +164,7 @@ export default class TreeNode extends DomHelper {
 
             this.element.querySelector('ol').classList[isExpanding ? 'add' : 'remove'](this.options.prefix + 'visible');
 
-            if (eventFunc) eventFunc.call(e, this);
+            if (eventFunc) eventFunc.apply(e, this.getNodeDataForCustomFunction(this.element));
 
         }, this);
     }
@@ -143,7 +197,7 @@ export default class TreeNode extends DomHelper {
     }
 
     isCurrentNodeExpanded(node) {
-        return this.isEqual('array', Array.from(node.querySelector('i').classList), this.options.icons.collapseIcon);
+        return this.isEqual('array', Array.from(node.querySelector('i').classList), this.options.icons.collapseIcon) || this.isEqual('array', Array.from(node.querySelector('i').classList), this.options.icons.noChildren);
     }
 
     doDrop(e, isInsert) {
@@ -151,19 +205,38 @@ export default class TreeNode extends DomHelper {
         var isExpanded = this.isCurrentNodeExpanded(document.querySelector('.' + this.options.nodeCopyClass));
         var newNode = new TreeNode(nodeData, this.options, this.tree);
         var insertedParent = this.element.previousSibling || this.element.parentNode.parentNode;
+        var actionableNode;
 
         if (nodeData.children && nodeData.children.length > 0) this.addChildNodes(newNode, nodeData.children, isExpanded); 
         
         if (!isInsert) {
-            this.element.parentNode.insertBefore(newNode.element, this.element);
+            actionableNode = newNode.element;
+            this.element.parentNode.insertBefore(actionableNode, this.element);
         }
 
         else {
-            this.addChildNodes({element: insertedParent}, [nodeData]);
-            this.updateIconClasses(insertedParent);
+            actionableNode = insertedParent;
+            this.addChildNodes({element: actionableNode}, [nodeData]);
+            this.updateIconClasses(actionableNode);
         }
 
-        if (this.options.afterMove) this.options.afterMove.call(e, this);
+        if (!isExpanded && isExpanded !== undefined) this.reupdateIconClass(!isInsert, newNode.element, insertedParent);
+
+        if (this.options.afterMove) {
+            this.options.afterMove.apply(e, this.getNodeDataForCustomFunction(actionableNode));
+        }
+    }
+
+    reupdateIconClass(isNotInsert, newNode, insertedParent) {
+
+        if (isNotInsert) {
+            newNode.querySelector('i').className = this.options.icons.expandIcon.join(' ');
+        }
+
+        else {
+            console.log(insertedParent);
+        }
+
     }
 
     addChildNodes(newNode, children, isExpanded) {
@@ -226,4 +299,11 @@ export default class TreeNode extends DomHelper {
     ondragend(e) {
         
     }   
+
+    getNodeDataForCustomFunction(node) {
+        return [
+            node,
+            this.toJSON({}, node),
+        ];
+    }
 }

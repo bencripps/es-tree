@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 15:05:21
+* @Last Modified time: 2015-09-13 09:43:39
 */
 
 import DomHelper from './dom-helper.js';
@@ -17,12 +17,13 @@ const HINT_WIDTH = 60;
 const EXPANDED_ICON_CLASSLIST = ['fa', 'fa-plus', PREFIX + 'icon'];
 const COLLAPED_ICON_CLASSLIST = ['fa', 'fa-minus', PREFIX + 'icon'];
 const NO_CHILDREN_ICON_CLASSLIST = ['fa', 'fa-circle-thin', PREFIX + 'icon'];
+const DESTROYABLE_ICON_CLASSLIST = ['fa', 'fa-remove', PREFIX + 'icon', PREFIX + 'remove'];
+const SHOW_DESTROY_ICON_CLASS = PREFIX + 'show';
 
 export default class Tree extends DomHelper {
 
     constructor(selector, data, options) {
-        super();
-        this.element = document.querySelector(selector);
+        super(selector);
         this.data = data;
 
         this.verify(selector);
@@ -37,15 +38,17 @@ export default class Tree extends DomHelper {
             icons: {
                 expandIcon: EXPANDED_ICON_CLASSLIST,
                 collapseIcon: COLLAPED_ICON_CLASSLIST,
-                noChildren: NO_CHILDREN_ICON_CLASSLIST
+                noChildren: NO_CHILDREN_ICON_CLASSLIST,
+                destroyIcon: DESTROYABLE_ICON_CLASSLIST,
+                showDestroyIconClass: SHOW_DESTROY_ICON_CLASS
             },
             draggable: true,
             destroyable: true,
             expandedOnLoad: true,
-            afterDestroy: function(node) {},
-            afterExpand: function(node) {},
-            afterCollapse: function(node) {},
-            afterMove: function(node) {}
+            afterDestroy: function(element, nodeData) {},
+            afterExpand: function(element, nodeData) {},
+            afterCollapse: function(element, nodeData) {},
+            afterMove: function(element, nodeData) {}
         };
 
         this.options = Object.assign(this.defaults, options);
