@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-13 09:43:39
+* @Last Modified time: 2015-09-13 17:27:05
 */
 
 import DomHelper from './dom-helper.js';
@@ -58,7 +58,7 @@ export default class Tree extends DomHelper {
     verify(selector) {
         if (!this.element) throw Error(`No document node with ${selector} selector could be found!`);
 
-        if (!this.data) throw Error('Data must been provided in order to build tree');
+        if (!this.data) throw Error('Data must been provided in order to build tree!');
     }
 
     init() {
