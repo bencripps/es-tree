@@ -225,6 +225,32 @@ module.exports={
 },{}],2:[function(require,module,exports){
 /* 
 * @Author: ben_cripps
+* @Date:   2015-09-14 18:57:15
+* @Last Modified by:   ben_cripps
+* @Last Modified time: 2015-09-14 19:01:01
+*/
+
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _srcJsComponentsTreeJs = require('../../src/js/components/tree.js');
+
+var _srcJsComponentsTreeJs2 = _interopRequireDefault(_srcJsComponentsTreeJs);
+
+var _dataDataJson = require('../data/data.json');
+
+var _dataDataJson2 = _interopRequireDefault(_dataDataJson);
+
+document.addEventListener('DOMContentLoaded', function () {
+    var tree = new _srcJsComponentsTreeJs2['default']('#tree-mount', _dataDataJson2['default'], {
+        expandedOnLoad: true
+    });
+});
+
+},{"../../src/js/components/tree.js":5,"../data/data.json":1}],3:[function(require,module,exports){
+/* 
+* @Author: ben_cripps
 * @Date:   2015-09-08 09:09:32
 * @Last Modified by:   ben_cripps
 * @Last Modified time: 2015-09-13 09:06:31
@@ -302,12 +328,12 @@ var DomHelper = (function () {
 exports['default'] = DomHelper;
 module.exports = exports['default'];
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /* 
 * @Author: ben_cripps
 * @Date:   2015-09-07 18:37:18
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-13 09:42:25
+* @Last Modified time: 2015-09-13 20:04:39
 */
 'use strict';
 
@@ -564,7 +590,7 @@ var TreeNode = (function (_DomHelper) {
             if (isNotInsert) {
                 newNode.querySelector('i').className = this.options.icons.expandIcon.join(' ');
             } else {
-                console.log(insertedParent);
+                // do nothing -- we want to expand nodes if theyre being inserted
             }
         }
     }, {
@@ -646,12 +672,12 @@ var TreeNode = (function (_DomHelper) {
 exports['default'] = TreeNode;
 module.exports = exports['default'];
 
-},{"./dom-helper.js":2}],4:[function(require,module,exports){
+},{"./dom-helper.js":3}],5:[function(require,module,exports){
 /* 
 * @Author: ben_cripps
 * @Date:   2015-09-07 17:49:15
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-13 09:43:39
+* @Last Modified time: 2015-09-13 18:40:50
 */
 
 'use strict';
@@ -689,6 +715,13 @@ var COLLAPED_ICON_CLASSLIST = ['fa', 'fa-minus', PREFIX + 'icon'];
 var NO_CHILDREN_ICON_CLASSLIST = ['fa', 'fa-circle-thin', PREFIX + 'icon'];
 var DESTROYABLE_ICON_CLASSLIST = ['fa', 'fa-remove', PREFIX + 'icon', PREFIX + 'remove'];
 var SHOW_DESTROY_ICON_CLASS = PREFIX + 'show';
+var AFTER_DESTROY = function AFTER_DESTROY(element, nodeData) {};
+var AFTER_EXPAND = function AFTER_EXPAND(element, nodeData) {};
+var AFTER_COLLAPSE = function AFTER_COLLAPSE(element, nodeData) {};
+var AFTER_MOVE = function AFTER_MOVE(element, nodeData) {};
+var IS_DRAGGABLE = true;
+var IS_DESTROYABLE = true;
+var EXPANDED_ON_LOAD = true;
 
 var Tree = (function (_DomHelper) {
     _inherits(Tree, _DomHelper);
@@ -715,13 +748,13 @@ var Tree = (function (_DomHelper) {
                 destroyIcon: DESTROYABLE_ICON_CLASSLIST,
                 showDestroyIconClass: SHOW_DESTROY_ICON_CLASS
             },
-            draggable: true,
-            destroyable: true,
-            expandedOnLoad: true,
-            afterDestroy: function afterDestroy(element, nodeData) {},
-            afterExpand: function afterExpand(element, nodeData) {},
-            afterCollapse: function afterCollapse(element, nodeData) {},
-            afterMove: function afterMove(element, nodeData) {}
+            draggable: IS_DRAGGABLE,
+            destroyable: IS_DESTROYABLE,
+            expandedOnLoad: EXPANDED_ON_LOAD,
+            afterDestroy: AFTER_DESTROY,
+            afterExpand: AFTER_EXPAND,
+            afterCollapse: AFTER_COLLAPSE,
+            afterMove: AFTER_MOVE
         };
 
         this.options = Object.assign(this.defaults, options);
@@ -733,7 +766,7 @@ var Tree = (function (_DomHelper) {
         value: function verify(selector) {
             if (!this.element) throw Error('No document node with ' + selector + ' selector could be found!');
 
-            if (!this.data) throw Error('Data must been provided in order to build tree');
+            if (!this.data) throw Error('Data must been provided in order to build tree!');
         }
     }, {
         key: 'init',
@@ -787,30 +820,4 @@ var Tree = (function (_DomHelper) {
 exports['default'] = Tree;
 module.exports = exports['default'];
 
-},{"./dom-helper.js":2,"./tree-node.js":3}],5:[function(require,module,exports){
-/* 
-* @Author: ben_cripps
-* @Date:   2015-09-07 18:22:43
-* @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-09-12 15:21:52
-*/
-
-'use strict';
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _componentsTreeJs = require('./components/tree.js');
-
-var _componentsTreeJs2 = _interopRequireDefault(_componentsTreeJs);
-
-var _dataDataJson = require('../../data/data.json');
-
-var _dataDataJson2 = _interopRequireDefault(_dataDataJson);
-
-document.addEventListener('DOMContentLoaded', function () {
-    var tree = new _componentsTreeJs2['default']('#tree-mount', _dataDataJson2['default'], {
-        expandedOnLoad: true
-    });
-});
-
-},{"../../data/data.json":1,"./components/tree.js":4}]},{},[5]);
+},{"./dom-helper.js":3,"./tree-node.js":4}]},{},[2]);

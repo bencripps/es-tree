@@ -4,7 +4,11 @@
         <meta charset='utf-8'>
         <link rel="stylesheet" href='..\vendor/font-awesome/css/font-awesome.min.css'>
         <link rel='stylesheet' type='text/css' href='css/estree.css'>
-        <script src='js/estree.js'></script>
+        <!-- I'm a built script from demo/js/src.js -->
+        <!-- Build Command -->
+            <!--  browserify demo/js/src.js  -t babelify --outfile demo/js/built.js -->
+        <!-- End Command -->
+        <script src='js/built.js'></script>
     </head>
     <body>
         <div class='es-tree-container'>
