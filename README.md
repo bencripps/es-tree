@@ -3,31 +3,30 @@
 ## A JS2015 (ES6) Compliant Tree Component
 
 ### Installation
-
     npm install es-tree
 
 #### ES6/JS2015
-    import Tree from './dist/js/estree.min.js';
-
-#### Using a Require
-    var Tree = require('./dist/js/estree.min.js');
+    import Tree from './src/js/components/tree.js';
 
 #### In a Browser
     <link rel='stylesheet' type='text/css' href='dist/css/estree.css'>
-    <script src='dist/js/estree.min.js'>
+    <script src='path/to/your/built/tree.js'>
 
 #### Sample Tree Initialization
-
-    var Tree = require('src/components/tree.js');
+    import Tree from 'path/to/your/built/tree.js';
+    
     document.on('DOMContentLoaded', function() {
-        var tree = new Tree('#treeMount', TreeData, options);
+        var tree = new Tree(
+                '#treeMount', // DOM selector
+                TreeData, // JSON object containing tree hierarchy
+                options // JSON object with tree options
+            ); 
     });
 
 #### Test
     npm run test
 
 ### Options 
-
     IS_DRAGGABLE: (boolean) // will determine if tree nodes can be dragged/moved
     IS_DESTROYABLE: (boolean) // will determine if nodes can be destroyed 
     EXPANDED_ON_LOAD: (boolean) // will tree be expanded on initial load
